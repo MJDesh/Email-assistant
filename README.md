@@ -1,60 +1,244 @@
-# AI Email Inbox Assistant — Hackathon Starter
+# 📬 AI Email Inbox Assistant
 
-## Setup (do this first, everyone)
+> An AI-powered email productivity assistant that helps you understand, prioritize, and respond to your inbox.
 
-```bash
-cd inbox-assistant
-python -m venv venv
-source venv/bin/activate      # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-cp .env.example .env
-# then edit .env and paste your Gemini API key (get one free at aistudio.google.com)
+## Overview
+
+**AI Email Inbox Assistant** uses Google Gemini to turn a regular email inbox into an intelligent productivity workspace.
+
+Instead of manually going through every message, users can:
+
+- Analyze emails and understand what needs attention
+- Automatically identify priority and action items
+- Generate reply drafts
+- Ask natural-language questions about their inbox
+- See which emails support an AI-generated answer
+
+Built with **Python, Streamlit, Pydantic, and Google Gemini**.
+
+## Features
+
+### 🧠 AI Email Analysis
+
+Select any email and get an AI-generated:
+
+- Summary
+- Priority level
+- Priority reasoning
+- Tasks and deadlines
+- Sender sentiment
+- Suggested reply tone
+
+### ✍️ AI Reply Drafts
+
+Generate a ready-to-edit response based on the email and its analysis.
+
+Each draft includes:
+
+- Confidence level
+- Human-review recommendation
+- Confidence reasoning
+
+### 🔎 Ask My Inbox
+
+Ask questions about your emails using natural language.
+
+**Examples:**
+
+```text
+What are my upcoming deadlines?
 ```
 
-Run the app:
+```text
+Which emails need my attention?
+```
+
+```text
+Did anyone mention the client meeting?
+```
+
+```text
+Which emails are related to the contract renewal?
+```
+
+The assistant returns an answer along with supporting source emails.
+
+### 📥 Inbox Interface
+
+- Email list and detail view
+- Priority indicators
+- Inbox health overview
+- AI-powered actions directly from the selected email
+
+## Tech Stack
+
+- **Python**
+- **Streamlit** — UI
+- **Google Gemini** — LLM
+- **google-genai** — Gemini API client
+- **Pydantic** — structured AI outputs and validation
+- **python-dotenv** — environment configuration
+- **JSON** — sample email storage
+
+## Project Structure
+
+```text
+.
+├── main.py
+├── llm_logic.py
+├── schemas.py
+├── data/
+│   └── emails.json
+├── .env.example
+├── .gitignore
+└── README.md
+```
+
+### Key Files
+
+| File | Description |
+|---|---|
+| `main.py` | Streamlit application and UI |
+| `llm_logic.py` | Gemini API calls and AI logic |
+| `schemas.py` | Pydantic models for emails and AI responses |
+| `data/emails.json` | Sample inbox data |
+
+## Getting Started
+
+### Prerequisites
+
+- Python 3.10+
+- A Google Gemini API key
+
+### 1. Clone the repository
+
+```bash
+git clone <repository-url>
+cd AI-Email-Inbox-Assistant
+```
+
+### 2. Create a virtual environment
+
+**Windows**
+
+```bash
+python -m venv emailenv
+emailenv\Scripts\activate
+```
+
+**macOS / Linux**
+
+```bash
+python3 -m venv emailenv
+source emailenv/bin/activate
+```
+
+### 3. Install dependencies
+
+```bash
+pip install streamlit google-genai pydantic python-dotenv
+```
+
+Or, if the repository contains a `requirements.txt`:
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Add your Gemini API key
+
+Create a `.env` file in the project root:
+
+```env
+GEMINI_API_KEY=your_gemini_api_key
+```
+
+> **Never commit your `.env` file or API key to GitHub.**
+
+### 5. Run the app
+
 ```bash
 streamlit run main.py
 ```
 
-## What's already built
+The application will open in your browser.
 
-- `schemas.py` — Pydantic models for emails and LLM output (analysis + draft reply)
-- `llm_logic.py` — Gemini API calls, structured JSON output, two functions:
-  `analyze_email()` and `draft_reply()`
-- `data/emails.json` — 8 realistic mock emails (urgent outage, contract pricing,
-  frustrated client, newsletter, scheduling confirmation, budget request) covering
-  a good spread for demoing
-- `main.py` — working Streamlit app: inbox list, email detail view, analysis panel,
-  draft reply with confidence scoring, and an **Inbox Health Score** in the sidebar
+## How It Works
 
-## Already-included differentiator features
+```text
+                    ┌──────────────────┐
+                    │   Streamlit UI   │
+                    │     main.py      │
+                    └────────┬─────────┘
+                             │
+              ┌──────────────┼──────────────┐
+              │              │              │
+              ▼              ▼              ▼
+          Analyze        Draft Reply    Ask Inbox
+              │              │              │
+              └──────────────┼──────────────┘
+                             ▼
+                    ┌──────────────────┐
+                    │   Gemini API     │
+                    └──────────────────┘
+                             │
+                             ▼
+                    Structured Response
+                             │
+                             ▼
+                         Pydantic
+```
 
-1. **Inbox Health Score** (sidebar) — aggregates urgency/frustration/open tasks
-   across analyzed emails into one score. Click "Analyze all emails" to populate it.
-2. **Reply confidence + human-review flag** — every draft reply comes with a
-   confidence level (High/Medium/Low) and a reason, so the tool knows when
-   NOT to auto-send (e.g. pricing, commitments, emotionally charged replies).
+AI responses are requested in structured JSON and validated using Pydantic models before being displayed.
 
-## Where to go next (suggested split)
+## Safety & Grounding
 
-- **Person 1 (LLM):** tune prompts in `llm_logic.py`, test edge cases (very short
-  emails, multi-language, sarcasm), maybe add thread-context stitching using
-  `thread_id` in emails.json
-- **Person 2 (LLM/data):** expand `data/emails.json` with more variety, and/or
-  build the thread-summary feature (combine e1 + e8, which share `thread_id`)
-- **Person 3 (UI):** polish `main.py` — better priority color styling, maybe a
-  card layout instead of buttons for the inbox list
-- **Person 4 (UI):** add the deadline timeline view (new tab/section — collect
-  all `Task.deadline` values across analyzed emails and show on a simple chart
-  or sorted list)
-- **Person 5 (data + demo):** stress-test the flow end-to-end, prepare the pitch,
-  make sure the demo emails tell a clear "before/after" story
+The application is designed around a **human-in-the-loop** workflow:
 
-## Notes
+- Generated replies are drafts and are not automatically sent.
+- Inbox questions are instructed to use only the supplied email context.
+- The model is instructed not to invent missing facts.
+- Ask My Inbox returns supporting emails for its answers.
+- Structured responses are validated before being used by the UI.
 
-- Analysis and drafts are cached in `st.session_state` so you don't burn API
-  calls re-analyzing the same email on every rerun.
-- If you hit Gemini free-tier rate limits during dev, stagger testing across
-  teammates or add a short `time.sleep()` between calls in a loop.
-- The `thread_id` field in emails.json lets you group e1 (initial outage report)
-  and e8 (follow-up) — useful if you build thread-level context/summaries.
+## Screenshots
+
+Add screenshots of the application here:
+
+```text
+docs/
+├── inbox.png
+├── email-analysis.png
+└── ask-my-inbox.png
+```
+
+## Roadmap
+
+- [ ] Semantic email retrieval with embeddings
+- [ ] Vector search for larger inboxes
+- [ ] SQLite / FTS5 email search
+- [ ] Gmail integration
+- [ ] Calendar integration
+- [ ] Conversation/thread context
+- [ ] Persistent Ask My Inbox history
+- [ ] Personalized reply style
+- [ ] Follow-up and promise tracking
+- [ ] AI response evaluation and monitoring
+
+## Contributing
+
+Contributions, suggestions, and improvements are welcome.
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Commit your changes
+5. Open a pull request
+
+## License
+
+Add your preferred license here.
+
+---
+
+**Built with Python, Streamlit, Google Gemini, and Pydantic.**
