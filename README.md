@@ -1,4 +1,4 @@
-# 📬 AI Email Inbox Assistant
+# AI Email Inbox Assistant
 
 > An AI-powered email productivity assistant that helps you understand, prioritize, and respond to your inbox.
 
@@ -18,7 +18,7 @@ Built with **Python, Streamlit, Pydantic, and Google Gemini**.
 
 ## Features
 
-### 🧠 AI Email Analysis
+### AI Email Analysis
 
 Select any email and get an AI-generated:
 
@@ -29,7 +29,7 @@ Select any email and get an AI-generated:
 - Sender sentiment
 - Suggested reply tone
 
-### ✍️ AI Reply Drafts
+### AI Reply Drafts
 
 Generate a ready-to-edit response based on the email and its analysis.
 
@@ -39,7 +39,7 @@ Each draft includes:
 - Human-review recommendation
 - Confidence reasoning
 
-### 🔎 Ask My Inbox
+### Ask My Inbox
 
 Ask questions about your emails using natural language.
 
@@ -63,7 +63,7 @@ Which emails are related to the contract renewal?
 
 The assistant returns an answer along with supporting source emails.
 
-### 📥 Inbox Interface
+### Inbox Interface
 
 - Email list and detail view
 - Priority indicators
