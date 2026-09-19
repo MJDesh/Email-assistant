@@ -1,6 +1,6 @@
 # AI Email Inbox Assistant — Hackathon Starter
 
-## Setup
+## Setup (do this first, everyone)
 
 ```bash
 cd inbox-assistant
